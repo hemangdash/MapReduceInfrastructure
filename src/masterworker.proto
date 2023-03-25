@@ -1,0 +1,38 @@
+syntax = "proto3";
+
+package masterworker;
+
+service WorkerService {
+    rpc RegisterMapService(MapRequest) returns (MapReply);
+    rpc RegisterReduceService(ReduceRequest) returns (ReduceReply);
+}
+
+message MapReply {
+    bool status = 1;
+    repeated string intermediate_file_location = 2;
+}
+
+message ReduceReply {
+    bool status = 1;
+}
+
+message MapRequest {
+    uint32 shard_id = 1;
+    uint32 n_output = 2;
+    string user_id = 3;
+    string output_dir = 4;
+    repeated ShardInfo shards = 5;
+}
+
+message ShardInfo {
+    string file_addr = 1;
+    uint32 start_off = 2;
+    uint32 end_off = 3;
+}
+
+message ReduceRequest {
+    string user_id = 1;
+    string output_dir = 2;
+    repeated string intermediate_file_address = 3;
+    uint32 reducer_id = 4;
+}
